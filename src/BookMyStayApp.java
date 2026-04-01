@@ -1,4 +1,4 @@
-import java.util.HashMap;
+import java.util.*;
 
 // ================= ABSTRACT ROOM CLASS =================
 abstract class Room {
@@ -38,9 +38,8 @@ class SuiteRoom extends Room {
     }
 }
 
-// ================= INVENTORY CLASS (UC3) =================
+// ================= INVENTORY (UC3) =================
 class RoomInventory {
-
     private HashMap<String, Integer> availability;
 
     RoomInventory() {
@@ -52,10 +51,6 @@ class RoomInventory {
 
     int getAvailability(String roomType) {
         return availability.getOrDefault(roomType, 0);
-    }
-
-    void updateAvailability(String roomType, int count) {
-        availability.put(roomType, count);
     }
 
     void displayInventory() {
@@ -76,7 +71,6 @@ class RoomSearchService {
         for (Room room : rooms) {
             int available = inventory.getAvailability(room.type);
 
-            // Show only available rooms
             if (available > 0) {
                 room.displayDetails();
                 System.out.println("Available: " + available + "\n");
@@ -84,6 +78,46 @@ class RoomSearchService {
         }
 
         System.out.println("=== End of Search Results ===");
+    }
+}
+
+// ================= RESERVATION (UC5) =================
+class Reservation {
+    String guestName;
+    String roomType;
+
+    Reservation(String guestName, String roomType) {
+        this.guestName = guestName;
+        this.roomType = roomType;
+    }
+
+    void displayReservation() {
+        System.out.println("Guest: " + guestName + " | Room Type: " + roomType);
+    }
+}
+
+// ================= BOOKING QUEUE (UC5) =================
+class BookingQueue {
+
+    private Queue<Reservation> queue;
+
+    BookingQueue() {
+        queue = new LinkedList<>();
+    }
+
+    // Add request (FIFO)
+    void addRequest(Reservation reservation) {
+        queue.add(reservation);
+        System.out.println("Booking request added for " + reservation.guestName);
+    }
+
+    // Display all requests
+    void displayQueue() {
+        System.out.println("\n--- Booking Requests Queue (FIFO) ---");
+
+        for (Reservation r : queue) {
+            r.displayReservation();
+        }
     }
 }
 
@@ -96,14 +130,13 @@ public class BookMyStayApp {
         System.out.println("=======================================");
         System.out.println("     Welcome to Book My Stay App");
         System.out.println("     Hotel Booking Management System");
-        System.out.println("     Version: 4.1");
+        System.out.println("     Version: 5.1");
         System.out.println("=======================================");
 
         // ===== UC2 =====
         Room r1 = new SingleRoom();
         Room r2 = new DoubleRoom();
         Room r3 = new SuiteRoom();
-
         Room[] rooms = {r1, r2, r3};
 
         // ===== UC3 =====
@@ -111,11 +144,20 @@ public class BookMyStayApp {
 
         // ===== UC4 =====
         RoomSearchService searchService = new RoomSearchService();
-
-        // Perform search (READ-ONLY)
         searchService.searchAvailableRooms(inventory, rooms);
 
-        // Show inventory separately (unchanged)
+        // ===== UC5 =====
+        BookingQueue bookingQueue = new BookingQueue();
+
+        // Simulating booking requests
+        bookingQueue.addRequest(new Reservation("Abishek", "Single Room"));
+        bookingQueue.addRequest(new Reservation("Rahul", "Double Room"));
+        bookingQueue.addRequest(new Reservation("Priya", "Suite Room"));
+
+        // Display queue (FIFO order)
+        bookingQueue.displayQueue();
+
+        // Inventory remains unchanged
         inventory.displayInventory();
 
         System.out.println("\nApplication execution completed.");
