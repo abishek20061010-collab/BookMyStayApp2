@@ -1,21 +1,16 @@
-/**
- * Hotel Booking Application Entry Point
- * This class represents the starting point of the Book My Stay App.
- *
- * It demonstrates how a Java application begins execution
- * and displays a welcome message to the user.
- *
- * @author Abishek
- * @version 1.0
- */
-public class BookMyStayApp
+public class BookMyStayApp {
 
     /**
      * Main method - Entry point of the application
-     * @param args command line arguments
      */
     public static void main(String[] args) {
 
+        System.out.println("=======================================");
+        System.out.println("     Welcome to Book My Stay App");
+        System.out.println("     Hotel Booking Management System");
+        System.out.println("     Version: 1.0");
+        System.out.println("=======================================");
 
+        System.out.println("Application started successfully!");
     }
 }
